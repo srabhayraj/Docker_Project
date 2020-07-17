@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  dbos:
+    image: mysql:5.7
+    volumes:
+      - mysql_storage1:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_USER: sqluser
+      MYSQL_PASSWORD: sqlpass
+      MYSQL_DATABASE: database
+
+  joomla:
+    image: joomla:3.9.16-php7.2-apache
+    restart: always
+    links:
+      - dbos
+    ports:
+      - 808:80
+    environment:
+      JOOMLA_DB_HOST: dbos
+      JOOMLA_DB_USER: root
+      JOOMLA_DB_PASSWORD: rootpass
+      JOOMLA_DB_NAME: database
+    volumes: 
+      - joomla_storage1:/var/www/html
+
+volumes:
+  joomla_storage1:
+  mysql_storage1:
+
